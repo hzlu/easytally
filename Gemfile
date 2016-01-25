@@ -43,3 +43,14 @@ group :development, :test do
   gem 'spring'
 end
 
+group :development do
+  gem 'awesome_print'
+  gem 'better_errors'
+  gem 'meta_request'
+  gem 'pry-rails'
+end
+
+gem 'devise'
+gem 'lograge'
+gem 'slim-rails'
+
