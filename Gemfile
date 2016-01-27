@@ -53,4 +53,4 @@ end
 gem 'devise'
 gem 'lograge'
 gem 'slim-rails'
-
+gem 'passenger'

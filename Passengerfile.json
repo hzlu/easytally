@@ -1,0 +1,6 @@
+{
+  "port": 3000,
+  "log_file": "log/awesome.log",
+  "environment": "development",
+  "max_pool_size": 6
+}
