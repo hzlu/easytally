@@ -11,28 +11,38 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160125154204) do
+ActiveRecord::Schema.define(version: 20160130171441) do
 
-  create_table "tallies", force: :cascade do |t|
-    t.integer  "user_id",       limit: 4
-    t.string   "remark",        limit: 255
-    t.decimal  "amount",                    precision: 9, scale: 2
-    t.datetime "created_at",                                        null: false
-    t.datetime "updated_at",                                        null: false
-    t.integer  "tally_type_id", limit: 4
-  end
-
-  add_index "tallies", ["tally_type_id"], name: "index_tallies_on_tally_type_id", using: :btree
-  add_index "tallies", ["user_id"], name: "index_tallies_on_user_id", using: :btree
-
-  create_table "tally_types", force: :cascade do |t|
+  create_table "income_types", force: :cascade do |t|
     t.integer  "user_id",    limit: 4
-    t.string   "type",       limit: 255
+    t.string   "name",       limit: 255
     t.datetime "created_at",             null: false
     t.datetime "updated_at",             null: false
   end
 
-  add_index "tally_types", ["type"], name: "index_tally_types_on_type", using: :btree
+  add_index "income_types", ["name"], name: "index_income_types_on_name", using: :btree
+  add_index "income_types", ["user_id"], name: "index_income_types_on_user_id", using: :btree
+
+  create_table "tallies", force: :cascade do |t|
+    t.integer  "user_id",        limit: 4
+    t.string   "remark",         limit: 255
+    t.decimal  "amount",                     precision: 9, scale: 2
+    t.datetime "created_at",                                         null: false
+    t.datetime "updated_at",                                         null: false
+    t.integer  "tallyable_id",   limit: 4
+    t.string   "tallyable_type", limit: 255
+  end
+
+  add_index "tallies", ["user_id"], name: "index_tallies_on_user_id", using: :btree
+
+  create_table "tally_types", force: :cascade do |t|
+    t.integer  "user_id",    limit: 4
+    t.string   "name",       limit: 255
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+  end
+
+  add_index "tally_types", ["name"], name: "index_tally_types_on_name", using: :btree
   add_index "tally_types", ["user_id"], name: "index_tally_types_on_user_id", using: :btree
 
   create_table "users", force: :cascade do |t|
@@ -64,7 +74,7 @@ ActiveRecord::Schema.define(version: 20160125154204) do
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
   add_index "users", ["unlock_token"], name: "index_users_on_unlock_token", unique: true, using: :btree
 
-  add_foreign_key "tallies", "tally_types"
+  add_foreign_key "income_types", "users"
   add_foreign_key "tallies", "users"
   add_foreign_key "tally_types", "users"
 end

@@ -7,4 +7,5 @@ class User < ActiveRecord::Base
 
   has_many :tallies
   has_many :tally_types
+  has_many :income_types
 end

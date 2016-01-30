@@ -1,0 +1,3 @@
+class TallyTypesController < ApplicationController
+end
+

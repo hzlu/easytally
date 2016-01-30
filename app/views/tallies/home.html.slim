@@ -1,0 +1,42 @@
+section
+  section
+    = form_for @tally, method: :post do |f|
+      .input-group
+        = radio_button_tag :flag, 'income'
+        = label_tag :flag_income, '收入'
+        = radio_button_tag :flag, 'expend'
+        = label_tag :flag_expend, '支出'
+      .input-group
+        = f.text_field :amount, :placeholder => '请输入金额'
+      .input-group
+        = f.select :tallyable_id, options_from_collection_for_select(current_user.income_types, :id, :name)
+        = f.hidden_field :tallyable_type, :value => 'IncomeType'
+      .input-group
+        = f.text_area :remark, :placeholder => '备注信息'
+      = f.submit '确认'
+  section
+    h1 账目简报
+    table
+      thead
+        tr
+          th 时间
+          th 收入
+          th 支出
+          th 结余
+      tbody
+        tr
+          td 本周
+          td ￥500.00
+          td ￥400.00
+          td ￥100.00
+        tr
+          td 本月
+          td ￥500.00
+          td ￥400.00
+          td ￥100.00
+        tr
+          td 本年
+          td ￥500.00
+          td ￥400.00
+          td ￥100.00
+
