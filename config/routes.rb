@@ -6,8 +6,14 @@ Rails.application.routes.draw do
   root 'tallies#home'
 
   resources :tallies, only: [:index, :create, :destroy] do
-    get :home, on: :collection
+    collection do
+      get :home
+      get :tally_data
+    end
   end
+
+  resources :tally_types
+  resources :income_types
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'

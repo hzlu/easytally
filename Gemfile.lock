@@ -1,3 +1,10 @@
+GIT
+  remote: git://github.com/radar/by_star
+  revision: eaf25d75c78ebd56e8c68e94c6d4b2e0153d951a
+  specs:
+    by_star (2.2.1)
+      activesupport
+
 GEM
   remote: https://ruby.taobao.org/
   specs:
@@ -197,6 +204,7 @@ PLATFORMS
 DEPENDENCIES
   awesome_print
   better_errors
+  by_star!
   byebug
   coffee-rails (~> 4.1.0)
   devise

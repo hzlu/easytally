@@ -2,41 +2,130 @@ section
   section
     = form_for @tally, method: :post do |f|
       .input-group
-        = radio_button_tag :flag, 'income'
+        = radio_button_tag :flag, 'income', true, 'v-model' => 'pickedFlag'
         = label_tag :flag_income, '收入'
-        = radio_button_tag :flag, 'expend'
+        = radio_button_tag :flag, 'expend', false, 'v-model' => 'pickedFlag'
         = label_tag :flag_expend, '支出'
       .input-group
         = f.text_field :amount, :placeholder => '请输入金额'
-      .input-group
-        = f.select :tallyable_id, options_from_collection_for_select(current_user.income_types, :id, :name)
+      .input-group v-if="pickedFlag == 'income'"
+        = f.select :tallyable_id
+          option v-for="type in incomeTypes" :value='type.id'
+            | {{ type.name }}
         = f.hidden_field :tallyable_type, :value => 'IncomeType'
+      .input-group (v-else)
+        = f.select :tallyable_id
+          option v-for="type in tallyTypes" :value='type.id'
+            | {{ type.name }}
+        = f.hidden_field :tallyable_type, :value => 'TallyType'
       .input-group
         = f.text_area :remark, :placeholder => '备注信息'
       = f.submit '确认'
   section
+    h2 新增收入来源
+    = form_for @income_type, method: :post, remote: true do |f|
+      .input-group
+        = f.text_field :name
+      = f.submit '确认'
+    ul
+      li v-for="type in incomeTypes"
+        | {{ type.name }}
+        span @click="deleteIncomeType(type)" X
+  section
+    h2 新增消费类型
+    = form_for @tally_type, method: :post, remote: true do |f|
+      .input-group
+        = f.text_field :name
+      = f.submit '确认'
+    ul
+      li v-for="type in tallyTypes"
+        | {{ type.name }}
+        span @click="deleteTallyType(type)" X
+  section
     h1 账目简报
-    table
-      thead
-        tr
-          th 时间
-          th 收入
-          th 支出
-          th 结余
-      tbody
-        tr
-          td 本周
-          td ￥500.00
-          td ￥400.00
-          td ￥100.00
-        tr
-          td 本月
-          td ￥500.00
-          td ￥400.00
-          td ￥100.00
-        tr
-          td 本年
-          td ￥500.00
-          td ￥400.00
-          td ￥100.00
+    tallytable v-bind:tally="tallyData"
+    template#tally-template
+      table
+        thead
+          tr
+            th
+            th 收入
+            th 支出
+            th 结余
+        tbody
+          tr
+            td 今天
+            td ￥{{ tally.today_income | fix2 }}
+            td ￥{{ tally.today_expend | fix2 }}
+            td
+          tr
+            td 本周
+            td ￥{{ tally.week_income | fix2 }}
+            td ￥{{ tally.week_expend | fix2 }}
+            td
+          tr
+            td 本月
+            td ￥{{ tally.month_income | fix2 }}
+            td ￥{{ tally.month_expend | fix2 }}
+            td ￥{{ (+tally.month_income) + (+tally.month_expend) | fix2 }}
+          tr
+            td 本年
+            td ￥{{ tally.year_income | fix2 }}
+            td ￥{{ tally.year_expend | fix2 }}
+            td ￥{{ (+tally.year_income) + (+tally.year_expend) | fix2 }}
+
+= content_for :other_js do
+  javascript:
+    $(document).ready(function() {
+      Vue.component('tallytable', {
+        template: '#tally-template',
+        props: ['tally']
+      })
+      Vue.filter('fix2', function(value) {
+        return (+value).toFixed(2);
+      })
+      var tallyVue = new Vue({
+        el: 'body',
+        data: {
+          getTallyDataUrl: '/tallies/tally_data',
+          pickedFlag: '',
+          tallyData: {},
+          incomeTypes: [],
+          tallyTypes: []
+        },
+        ready: function() {
+          var self = this;
+          $.getJSON(self.getTallyDataUrl, function(response) {
+            self.tallyData = response.tally_data;
+            self.incomeTypes = response.income_types;
+            self.tallyTypes = response.tally_types;
+          });
+        },
+        methods: {
+          deleteIncomeType: function(type) {
+            var self = this;
+            $.post('/income_types/' + type.id, { _method: 'delete' }, function(response) {
+              if (response.msg == 'success') {
+                self.incomeTypes.splice(self.incomeTypes.indexOf(type), 1);
+              }
+            });
+          },
+          deleteTallyType: function(type) {
+            var self = this;
+            $.post('/tally_types/' + type.id, { _method: 'delete' }, function(response) {
+              if (response.msg == 'success') {
+                self.tallyTypes.splice(self.tallyTypes.indexOf(type), 1);
+              }
+            });
+          }
+        }
+      })
+
+      $('#new_income_type').on('ajax:success', function(e, data, status, xhr) {
+        tallyVue.incomeTypes.push(data);
+      });
+      $('#new_tally_type').on('ajax:success', function(e, data, status, xhr) {
+        tallyVue.tallyTypes.push(data);
+      });
+    })
 

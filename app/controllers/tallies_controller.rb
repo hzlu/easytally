@@ -1,13 +1,18 @@
 class TalliesController < ApplicationController
   def home
     @tally = Tally.new
+    @income_type = IncomeType.new
+    @tally_type = TallyType.new
   end
 
   def index
   end
 
+  def tally_data
+  end
+
   def create
-    @tally = current_user.tallies.create(tally_params)
+    @tally = current_user.tallies.build(tally_params)
     if @tally.save
       return render json: @tally.to_json
     else
