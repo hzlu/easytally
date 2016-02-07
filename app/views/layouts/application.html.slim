@@ -1,0 +1,15 @@
+doctype html
+html
+  head
+    title Easytally
+    = stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track' => true
+    = csrf_meta_tags
+  body data-page="#{controller_name}-#{action_name}"
+    = "#{flash[:notice]}"
+    = "#{flash[:success]}"
+
+    = yield
+
+    = javascript_include_tag 'application', 'data-turbolinks-track' => true
+    = yield :other_js
+
