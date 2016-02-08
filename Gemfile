@@ -44,6 +44,14 @@ group :development, :test do
 end
 
 group :development do
+  gem "capistrano", "~> 3.4"
+  gem 'capistrano-rvm'
+  gem 'capistrano-bundler', '~> 1.1.2'
+  gem 'capistrano-rails', '~> 1.1'
+  gem 'capistrano-passenger'
+end
+
+group :development do
   gem 'awesome_print'
   gem 'better_errors'
   gem 'meta_request'
