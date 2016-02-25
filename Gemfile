@@ -69,4 +69,5 @@ gem 'by_star', :git => "git://github.com/radar/by_star"
 # gem 'foundation-rails'
 # gem 'twitter-bootstrap-rails'
 gem 'bootstrap-sass', '~> 3.3.6'
+gem 'annotate'
 
